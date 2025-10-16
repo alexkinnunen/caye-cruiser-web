@@ -1,0 +1,23 @@
+# /caye-cruiser/docker-compose.yml
+# This file now ONLY manages services NOT included in the Supabase stack.
+
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: caye_cruiser_n8n
+    restart: always
+    ports:
+      - "127.0.0.1:5678:5678"
+    environment:
+      # These variables will be provided by the Supabase CLI's network
+      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
+      - WEBHOOK_URL=${WEBHOOK_URL}
+      - DB_POSTGRESDB_HOST=supabase_db_caye-cruiser
+      - DB_POSTGRESDB_DATABASE=postgres
+      - DB_POSTGRESDB_USER=postgres
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD} # Comes from supabase/.env
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+volumes:
+  n8n_data:
