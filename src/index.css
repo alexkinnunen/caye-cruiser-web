@@ -1,0 +1,314 @@
+/* ============================================================================
+   FONTS
+   ========================================================================= */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&family=Oswald:wght@300;400;500;600;700&display=swap");
+
+/* GRANTE Font - loaded via Adobe Fonts (Typekit) */
+
+/* ============================================================================
+   TAILWIND DIRECTIVES
+   ========================================================================= */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================================
+   BASE STYLES
+   ========================================================================= */
+@layer base {
+  /* CSS Custom Properties - Color Palette */
+  :root {
+    /* Nature-Inspired Color Palette */
+    --background: 30 18% 93%; /* Sand background */
+    --foreground: 20 14.3% 4.1%; /* Dark text for readability */
+
+    --card: 0 0% 100%;
+    --card-foreground: 20 14.3% 4.1%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14.3% 4.1%;
+
+    --primary: 60 50% 40%; /* Lime */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 193 24% 55%; /* Ocean Blue */
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 0 0% 85%; /* Grey for muted backgrounds */
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 17 33% 32%; /* Cocoa accent */
+    --accent-foreground: 0 0% 100%;
+    --accent-dark: 17 33% 32%; /* Cocoa for text on accent */
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 60 50% 40%;
+
+    --radius: 0.5rem;
+
+    /* Semantic Color Variables */
+    --lime: 60 50% 40%;
+    --ocean-blue: 193 24% 55%;
+    --cocoa: 17 33% 32%;
+    --grey: 0 0% 85%;
+    --sand: 20 14.3% 98%;
+  }
+
+  /* Dark Mode Color Palette */
+  .dark {
+    --background: 20 14.3% 4.1%;
+    --foreground: 210 40% 98%;
+
+    --card: 20 14.3% 4.1%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 20 14.3% 4.1%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 60 50% 50%; /* Brighter lime for dark mode */
+    --primary-foreground: 0 0% 0%;
+
+    --secondary: 193 24% 65%; /* Lighter ocean blue for dark mode */
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 215 27.9% 16.9%;
+    --muted-foreground: 217.9 10.6% 64.9%;
+
+    --accent: 17 33% 45%; /* Lighter cocoa for dark mode */
+    --accent-foreground: 0 0% 100%;
+    --accent-dark: 17 33% 45%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 60 50% 50%;
+
+    /* Dark Mode Semantic Colors */
+    --lime: 60 50% 50%;
+    --ocean-blue: 193 24% 65%;
+    --cocoa: 17 33% 45%;
+    --grey: 0 0% 20%;
+    --sand: 20 14.3% 98%;
+  }
+
+  /* Global Element Styles */
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Oswald";
+  }
+
+  /* Typography - Headings */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "grante", "GRANTE", "Oswald", "Arial Black", sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+}
+
+/* ============================================================================
+   COMPONENTS
+   ========================================================================= */
+
+/* Floating Map Button Component */
+.button {
+  cursor: pointer;
+  border: none;
+  background: #999933;
+  color: #fff;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  display: grid;
+  place-content: center;
+  transition:
+    background 300ms,
+    transform 200ms;
+  font-weight: 600;
+}
+
+.button__text {
+  position: absolute;
+  inset: 0;
+  animation: text-rotation 8s linear infinite;
+}
+
+.button__text > span {
+  position: absolute;
+  transform: rotate(calc(19deg * var(--index)));
+  inset: 7px;
+}
+
+.button__circle {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  background: #fff;
+  color: #999933;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button__icon--copy {
+  position: absolute;
+  transform: translate(-150%, 150%);
+}
+
+.button:hover {
+  background: #6F9BA7;
+  transform: scale(1.05);
+}
+
+.button:hover .button__icon {
+  color: #6F9BA7;
+}
+
+.button:hover .button__icon:first-child {
+  transition: transform 0.3s ease-in-out;
+  transform: translate(150%, -150%);
+}
+
+.button:hover .button__icon--copy {
+  transition: transform 0.3s ease-in-out 0.1s;
+  transform: translate(0);
+}
+
+/* ============================================================================
+   UTILITIES
+   ========================================================================= */
+
+/* Typography Utilities */
+.font-grante {
+  font-family: "grante", "GRANTE", "Oswald";
+}
+
+.font-kensington {
+  font-family: "Kensington", "Oswald";
+}
+
+.text-textured {
+  text-shadow:
+    0.5px 0.5px 0px rgba(0, 0, 0, 0.1),
+    -0.5px -0.5px 0px rgba(255, 255, 255, 0.1),
+    1px 1px 1px rgba(0, 0, 0, 0.05),
+    -1px -1px 1px rgba(255, 255, 255, 0.05);
+  filter: contrast(1.05) brightness(0.98);
+}
+
+/* Custom Color Utilities */
+.bg-sand {
+  background-color: hsl(var(--sand));
+}
+
+.bg-ocean-blue {
+  background-color: hsl(var(--ocean-blue));
+}
+
+.bg-cocoa {
+  background-color: hsl(var(--cocoa));
+}
+
+.bg-grey {
+  background-color: hsl(var(--grey));
+}
+
+.bg-beige {
+  background-color: hsl(var(--sand));
+}
+
+.text-cocoa {
+  color: hsl(var(--cocoa));
+}
+
+.text-sand {
+  color: hsl(var(--sand));
+}
+
+.text-beige {
+  color: hsl(var(--sand));
+}
+
+/* Animation Utilities */
+.caye-cruiser-text {
+  animation: slideUpFade 1.5s ease-out 0.5s both;
+}
+
+.island-rides-text {
+  animation: slideUpFade 1s ease-out 0.2s both;
+}
+
+.belize-text {
+  animation: slideInFromLeft 2s ease-out both;
+}
+
+/* Scroll Transition Utilities */
+.scroll-fade-in {
+  transition: all 0.8s ease-out;
+}
+
+.scroll-slide-up {
+  transition: transform 0.8s ease-out, opacity 0.8s ease-out;
+}
+
+/* GSAP Animation Utilities */
+.gsap-fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.gsap-slide-up {
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+/* ============================================================================
+   KEYFRAME ANIMATIONS
+   ========================================================================= */
+
+/* Button Animations */
+@keyframes text-rotation {
+  to {
+    rotate: 360deg;
+  }
+}
+
+/* Hero Section Animations */
+@keyframes slideUpFade {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+
+
+
+ 
