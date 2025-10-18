@@ -9,6 +9,7 @@ import BecomeAPartner from "@/pages/BecomeAPartner";
 import AccountPage from "@/pages/AccountPage";
 import NotFound from "@/pages/NotFound";
 import CartRentals from "@/components/marketing/CartRentals";
+import { useLenis } from "@/hooks/useLenis";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,9 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
+  // Initialize Lenis smooth scrolling
+  useLenis();
+
   return (
     <>
       <Sonner richColors />

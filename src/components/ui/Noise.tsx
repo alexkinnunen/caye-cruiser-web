@@ -53,10 +53,10 @@ const Noise = ({
     };
 
     const loop = () => {
+      frame++;
       if (frame % patternRefreshInterval === 0) {
         drawGrain();
       }
-      frame++;
       animationId = window.requestAnimationFrame(loop);
     };
 

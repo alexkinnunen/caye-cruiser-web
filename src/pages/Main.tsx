@@ -1,10 +1,11 @@
 // src/pages/Home.tsx
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { gsap } from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import About from "@/components/marketing/About";
 import Hero from "@/components/marketing/Hero";
 import InteractiveMap from "@/components/layout/InteractiveMap";
+import MapPlaceholder from "@/components/layout/MapPlaceholder";
 import ShutterOverlay from "@/components/ui/ShutterOverlay";
 import Section from "@/components/layout/Section";
 import VectorBg from "@/components/images/hero/vector-bg.svg";
@@ -15,44 +16,56 @@ gsap.registerPlugin(ScrollTrigger);
 
 
 const Home = () => {
+  // Check if Mapbox token is properly configured
+  const hasValidMapboxToken = useMemo(() => {
+    const token = import.meta.env.VITE_MAPBOX_TOKEN;
+    return token && token !== 'your-mapbox-token-here' && token.startsWith('pk.');
+  }, []);
+
   useEffect(() => {
-    const elements = gsap.utils.toArray<HTMLElement>(".image-transform");
-    const animations: gsap.core.Tween[] = [];
+    let ctx: gsap.Context | null = null;
 
-    elements.forEach((el, index) => {
-      const anim = gsap.fromTo(
-        el,
-        {
-          rotation: index % 2 === 0 ? -30 : 30,
-          transformOrigin: "center center",
-        },
-        {
-          rotation: 0,
-          ease: "none",
-          force3D: true,
-          scrollTrigger: {
-            trigger: el,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          },
-        }
-      );
-      animations.push(anim);
-    });
-
-    // Refresh ScrollTrigger after layout stabilizes
+    // Wait for layout to stabilize before initializing animations
     const timer = setTimeout(() => {
+      const elements = gsap.utils.toArray<HTMLElement>(".image-transform");
+
+      ctx = gsap.context(() => {
+        elements.forEach((el, index) => {
+          // Optimize: Use will-change and GPU acceleration
+          gsap.set(el, {
+            willChange: "transform",
+            force3D: true
+          });
+
+          gsap.fromTo(
+            el,
+            {
+              rotation: index % 2 === 0 ? -30 : 30,
+              transformOrigin: "center center",
+            },
+            {
+              rotation: 0,
+              ease: "none",
+              scrollTrigger: {
+                trigger: el,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: 1, // Add smoothing factor
+                invalidateOnRefresh: true,
+              },
+            }
+          );
+        });
+      });
+
+      // Refresh ScrollTrigger after setup
       ScrollTrigger.refresh();
     }, 100);
 
-    // CRITICAL: Cleanup function to prevent memory leaks and scroll conflicts
+    // Cleanup function
     return () => {
       clearTimeout(timer);
-      animations.forEach(anim => {
-        anim.scrollTrigger?.kill();
-        anim.kill();
-      });
+      ctx?.revert(); // Automatically kills all animations and ScrollTriggers
     };
   }, []);
 
@@ -100,14 +113,18 @@ const Home = () => {
 
         {/* Interactive Map Section - Overlays Hero with negative margin */}
         <Section spacing="md" background="transparent" className="-mt-[475px] relative">
-          <div className="rounded-2xl shadow-2xl overflow-hidden relative b-biege z-20" style={{ height: '700px' }}>
-            <InteractiveMap
-              pickup={null}
-              dropoff={null}
-              isLoading={false}
-              onMapClick={() => {}}
-              onRequestRide={() => {}}
-            />
+          <div className="rounded-2xl shadow-2xl overflow-hidden relative bg-white z-20" style={{ height: '700px' }}>
+            {hasValidMapboxToken ? (
+              <InteractiveMap
+                pickup={null}
+                dropoff={null}
+                isLoading={false}
+                onMapClick={() => {}}
+                onRequestRide={() => {}}
+              />
+            ) : (
+              <MapPlaceholder />
+            )}
           </div>
         </Section>
 

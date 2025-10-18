@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import FloatingMapButton from "@/components/ui/FloatingMapButton";
 import BottomNav from "@/components/layout/BottomNav";
-import Footer from "@/components/layout/Footer"
+import Footer from "@/components/layout/Footer";
 
 const Layout = () => {
   return (

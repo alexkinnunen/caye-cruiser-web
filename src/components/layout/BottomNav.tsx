@@ -9,7 +9,7 @@ const BottomNav = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-cocoa z-[110] border-cocoa/20" aria-label="Main navigation">
+    <nav className="fixed bottom-0 left-0 right-0 bg-cocoa z-50 border-cocoa/20" aria-label="Main navigation">
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Branding on left */}
