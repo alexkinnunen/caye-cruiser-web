@@ -38,18 +38,20 @@ src/
 
 ## Key Components
 
-**Pages**: Home, CartRentals, BecomeAPartner, UserAccount, PartnerAccount
-**Layout**: Header, Footer, Main (smooth scroll), InteractiveMap (Mapbox)
-**Auth**: AuthDialog, ProtectedRoute
-**Marketing**: Hero, HowItWorks, About, VehicleClasses
-**Partner**: Dashboard, Onboarding, Settings, RideQueue, EarningsStats
-**Ride**: RideCard, RideHistory, RideRequestForm, RideTracker
+**Pages**: Main (Home), CartRentals, BecomeAPartner, AccountPage (User/Partner), NotFound
+**Layout**: Layout, BottomNav, Footer, Section, InteractiveMap (Mapbox), MapPlaceholder
+**Auth**: AuthDialog, ProtectedRoute, ErrorBoundary
+**Marketing**: Hero, About, VehicleClasses, CartRentals
+**UI (Custom)**: FloatingMapButton, ShutterOverlay, Noise
+**UI (shadcn)**: 51 components (button, card, dialog, form, input, etc.)
+**Partner**: (To be implemented: Dashboard, Settings, RideQueue, EarningsStats)
+**Ride**: (To be implemented: RideCard, RideHistory, RideRequestForm, RideTracker)
 
 ## Hooks & Services
 
-**Hooks**: useAuth, useSupabase, useLocation, useRides, useMobile
-**Services**: stripe.ts, mapbox.ts, whatsapp.ts, analytics.ts
-**Types**: api.ts, database.ts, supabase.ts
+**Hooks**: useAuth, useLenis, useMobile, use-toast
+**Services**: (To be implemented: stripe, mapbox integration, whatsapp via n8n)
+**Lib**: client.ts (Supabase), constants.ts, env.ts (Zod validation), utils.ts, database.types.ts
 
 ## State Management
 - SupabaseProvider + AuthProvider
@@ -76,11 +78,14 @@ VITE_STRIPE_PUBLISHABLE_KEY
 VITE_MAPBOX_ACCESS_TOKEN
 ```
 
-## Animations (GSAP)
-- **ScrollSmoother**: `#smooth-wrapper` → `#smooth-content`
-- **Critical**: All ScrollTriggers must use `scroller: "#smooth-content"`
-- See `SCROLL_ANIMATION_LESSONS_LEARNED.md` for details
-- Lenis for additional smooth scrolling
+## Animations (GSAP + Lenis)
+- **Lenis Smooth Scrolling**: Initialized via `useLenis()` hook in App.tsx
+- **GSAP ScrollTrigger**: Standard implementation (NO ScrollSmoother)
+- **Critical**: Do NOT use `scroller` property (Lenis handles scrolling)
+- **Required**: Always use `gsap.context()` for cleanup
+- **Optimization**: Use `will-change`, `force3D`, and `invalidateOnRefresh: true`
+- See `docs/GSAP-SCROLLTRIGGER-IMPLEMENTATION.md` for complete guide
+- See `SHUTTER_OVERLAY_ANIMATION_ATTEMPTS.md` for clip-path animation patterns
 
 ## Integrations
 - **Supabase**: Auth, real-time DB, storage

@@ -27,10 +27,13 @@ export const useLenis = () => {
     // Integrate Lenis with GSAP ScrollTrigger
     lenis.on('scroll', ScrollTrigger.update);
 
-    // Add Lenis to gsap ticker for smooth updates
-    gsap.ticker.add((time) => {
+    // Store ticker callback reference for proper cleanup
+    const tickerCallback = (time: number) => {
       lenis.raf(time * 1000); // Convert gsap time to milliseconds
-    });
+    };
+
+    // Add Lenis to gsap ticker for smooth updates
+    gsap.ticker.add(tickerCallback);
 
     // Ensure ticker doesn't lag behind
     gsap.ticker.lagSmoothing(0);
@@ -38,7 +41,7 @@ export const useLenis = () => {
     // Cleanup
     return () => {
       lenis.destroy();
-      gsap.ticker.remove(lenis.raf);
+      gsap.ticker.remove(tickerCallback);
     };
   }, []);
 };

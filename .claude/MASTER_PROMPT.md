@@ -23,12 +23,15 @@ Golf cart ride-sharing platform for San Pedro, Belize. Connects riders with driv
 - **Mobile-first**, accessible (Radix UI)
 
 ## Critical Animation Rules
-- Use standard ScrollTrigger (NO ScrollSmoother - causes React conflicts)
-- Use `gsap.context()` for proper cleanup
-- Timeline positions: 0-1 scale with scrub
-- No pinning inside grid layouts
-- Add `will-change` and `force3D` for GPU acceleration
-- See `docs/GSAP-SCROLLTRIGGER-IMPLEMENTATION.md`
+- ❌ NO ScrollSmoother (removed - causes React conflicts)
+- ✅ Use Lenis for smooth scrolling (initialized in App.tsx via `useLenis()`)
+- ✅ Use standard ScrollTrigger (no `scroller` property needed)
+- ✅ Always use `gsap.context()` for proper cleanup
+- ✅ Timeline positions: 0-1 scale with scrub
+- ✅ No pinning inside grid layouts
+- ✅ Add `will-change` and `force3D` for GPU acceleration
+- ✅ Use `invalidateOnRefresh: true` for responsive behavior
+- See `docs/GSAP-SCROLLTRIGGER-IMPLEMENTATION.md` for complete guide
 
 ## Code Standards
 - Use `@/` import alias
@@ -54,6 +57,11 @@ src/
 5. WhatsApp notifications
 
 ## Resources
+- `PROJECT_STATUS.md` - Current implementation status & architecture
 - `PROJECT_SPECIFICATION.md` - Full tech spec
+- `DEVELOPER_GUIDE.md` - Complete customization guide (1100+ lines)
 - `docs/GSAP-SCROLLTRIGGER-IMPLEMENTATION.md` - Animation guide
+- `docs/HOWITWORKS-CUSTOMIZATION-GUIDE.md` - HowItWorks component guide
 - `figma-to-standalone-workflow.md` - Figma component workflow
+- `SHUTTER_OVERLAY_ANIMATION_ATTEMPTS.md` - Animation debugging log
+- `docs/agents/` - Specialized agent documentation (Animation, Component, Supabase, Figma)

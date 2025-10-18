@@ -20,7 +20,8 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
-        'brushtones': ['Kensington', 'Arial', 'sans-serif'],
+        'kensington': ['Kensington', 'Arial', 'sans-serif'],
+        'grante': ['grante', 'GRANTE', 'Oswald', 'Arial Black', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

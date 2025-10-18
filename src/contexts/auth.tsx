@@ -2,7 +2,7 @@
 // Combines: authContext.ts, authProvider.tsx, useAuth.ts
 
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { supabase } from "@/lib/client";
+import { supabase, isSupabaseConfigured } from "@/lib/client";
 import {
   AuthChangeEvent,
   AuthError,
@@ -50,6 +50,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [error, setError] = useState<AuthError | null>(null);
 
   useEffect(() => {
+    // Skip auth initialization if Supabase is not configured
+    if (!isSupabaseConfigured()) {
+      if (import.meta.env.DEV) {
+        console.warn("⚠️  Supabase not configured - auth features disabled");
+      }
+      setLoading(false);
+      return;
+    }
+
     const getSession = async () => {
       try {
         const { data, error } = await supabase.auth.getSession();
@@ -83,12 +92,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const clearError = () => setError(null);
 
   const signInWithGoogle = async () => {
+    if (!isSupabaseConfigured()) {
+      const configError = new Error("Supabase not configured. Add credentials to .env.local") as AuthError;
+      setError(configError);
+      return;
+    }
     setError(null);
     const { error } = await supabase.auth.signInWithOAuth({ provider: "google" });
     if (error) setError(error);
   };
 
   const signInWithEmail = async (credentials: SignInWithPasswordCredentials): Promise<AuthResponse["data"]> => {
+    if (!isSupabaseConfigured()) {
+      const configError = new Error("Supabase not configured. Add credentials to .env.local") as AuthError;
+      setError(configError);
+      throw configError;
+    }
     setError(null);
     const { data, error } = await supabase.auth.signInWithPassword(credentials);
     if (error) {
@@ -99,6 +118,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signUpWithEmail = async (credentials: SignUpWithPasswordCredentials): Promise<AuthResponse["data"]> => {
+    if (!isSupabaseConfigured()) {
+      const configError = new Error("Supabase not configured. Add credentials to .env.local") as AuthError;
+      setError(configError);
+      throw configError;
+    }
     setError(null);
     const { data, error } = await supabase.auth.signUp(credentials);
     if (error) {
@@ -109,6 +133,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signOut = async () => {
+    if (!isSupabaseConfigured()) {
+      return;
+    }
     setError(null);
     const { error } = await supabase.auth.signOut();
     if (error) setError(error);

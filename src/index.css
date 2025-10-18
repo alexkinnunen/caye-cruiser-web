@@ -243,6 +243,18 @@
   filter: contrast(1.05) brightness(0.98);
 }
 
+/* Brutalist Typography */
+.text-brutalist {
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+.text-oversized {
+  font-size: clamp(4rem, 12vw, 12rem);
+  line-height: 0.9;
+}
+
 /* Custom Color Utilities */
 .bg-sand {
   background-color: hsl(var(--sand));
@@ -274,6 +286,19 @@
 
 .text-beige {
   color: hsl(var(--sand));
+}
+
+/* Brutalist Color Blocks */
+.color-block-lime {
+  background-color: hsl(var(--lime));
+}
+
+.color-block-ocean {
+  background-color: hsl(var(--ocean-blue));
+}
+
+.color-block-cocoa {
+  background-color: hsl(var(--cocoa));
 }
 
 /* Animation Utilities */
@@ -323,6 +348,58 @@
   transform: translateZ(0);
   will-change: transform;
   backface-visibility: hidden;
+}
+
+/* Brutalist Geometric Utilities */
+.brutalist-border {
+  border: 4px solid #000;
+}
+
+.brutalist-border-thick {
+  border: 8px solid #000;
+}
+
+.geometric-rotate-3 {
+  transform: rotate(3deg);
+}
+
+.geometric-rotate-minus-3 {
+  transform: rotate(-3deg);
+}
+
+.geometric-circle {
+  border-radius: 50%;
+}
+
+.geometric-clip-diagonal {
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+}
+
+.geometric-clip-angle {
+  clip-path: polygon(0 0, 100% 10%, 100% 100%, 0 90%);
+}
+
+/* Grayscale Filter for Brutalist B&W Images */
+.brutalist-image {
+  filter: grayscale(100%) contrast(1.2);
+  transition: filter 0.3s ease;
+}
+
+.brutalist-image:hover {
+  filter: grayscale(80%) contrast(1.1);
+}
+
+/* Negative Space Utilities */
+.neg-space-sm {
+  padding: 2rem;
+}
+
+.neg-space-md {
+  padding: 4rem;
+}
+
+.neg-space-lg {
+  padding: 6rem;
 }
 
 /* ============================================================================

@@ -5,7 +5,8 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { ArrowRight, Loader2, MapPin, Navigation, Target, Plus, Minus } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { ArrowRight, Loader2, MapPin, Navigation, Target, Plus, Minus, AlertTriangle } from "lucide-react";
 import { LocationPoint } from "@/lib/constants";
 
 // Ensure your Mapbox token is correctly set in your .env file (VITE_MAPBOX_TOKEN)
@@ -29,8 +30,42 @@ const InteractiveMap = ({
   onRequestRide,
 }: InteractiveMapProps) => {
   const [pinMode, setPinMode] = useState<PinMode>('none');
+  const [mapError, setMapError] = useState<string | null>(null);
   const mapRef = useRef<MapRef>(null);
   const canRequest = pickup && dropoff;
+
+  // In development, show placeholder if Mapbox token is missing
+  if (!MAPBOX_TOKEN || MAPBOX_TOKEN === 'pk.your-mapbox-token-here') {
+    if (import.meta.env.DEV) {
+      return (
+        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
+          <div className="max-w-md p-8 text-center">
+            <MapPin className="w-16 h-16 mx-auto mb-4 text-blue-500" />
+            <h3 className="text-xl font-semibold mb-2 text-gray-800">Map Preview</h3>
+            <p className="text-gray-600 mb-4">
+              Add your Mapbox token to .env.local to see the interactive map here.
+            </p>
+            <code className="text-xs bg-white px-3 py-2 rounded border text-gray-700 block">
+              VITE_MAPBOX_TOKEN=pk.your-token...
+            </code>
+          </div>
+        </div>
+      );
+    }
+
+    // In production, show error
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-gray-50">
+        <Alert variant="destructive" className="max-w-md">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>Map Configuration Error</AlertTitle>
+          <AlertDescription>
+            Mapbox token is missing or invalid. Please configure VITE_MAPBOX_TOKEN.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
 
   const handleMapClick = (event: MapMouseEvent) => {
     if (pinMode !== 'none') {
@@ -52,10 +87,19 @@ const InteractiveMap = ({
   }, []);
 
   return (
-  
+
    <>
       <TooltipProvider>
         <div className="w-full h-full relative flex flex-col">
+          {/* Map Error Alert */}
+          {mapError && (
+            <Alert variant="destructive" className="absolute top-4 left-1/2 transform -translate-x-1/2 z-30 max-w-md">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertTitle>Map Error</AlertTitle>
+              <AlertDescription>{mapError}</AlertDescription>
+            </Alert>
+          )}
+
           {/* Map Section - Grows to fill available space */}
           <div className="w-full flex-1 relative">
               <Map
@@ -64,6 +108,7 @@ const InteractiveMap = ({
                 mapStyle="mapbox://styles/mapbox/streets-v11"
                 mapboxAccessToken={MAPBOX_TOKEN}
                 onClick={handleMapClick}
+                onError={(e) => setMapError(e.error?.message || 'Failed to load map')}
                 cursor={pinMode !== 'none' ? 'crosshair' : 'pointer'}
                 style={{ width: '100%', height: '100%' }}
                 scrollZoom={false}

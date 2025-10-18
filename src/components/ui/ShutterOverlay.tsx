@@ -15,69 +15,61 @@ const ShutterOverlay = ({ children }: ShutterOverlayProps) => {
   const textOverlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const topBar = topBarRef.current;
-    const bottomBar = bottomBarRef.current;
-    const textOverlay = textOverlayRef.current;
-
-    if (!topBar || !bottomBar || !textOverlay) return;
-
     const maxScroll = window.innerHeight * 0.5;
 
-    // Use gsap.context for better cleanup and scoping
-    const ctx = gsap.context(() => {
-      // Optimize: Use will-change for GPU acceleration
-      gsap.set([topBar, bottomBar, textOverlay], {
-        willChange: "transform",
-        force3D: true
-      });
-
-      // Animate top shutter
-      gsap.to(topBar, {
-        yPercent: -100,
-        ease: "none",
-        scrollTrigger: {
-          trigger: "body",
-          start: "top top",
-          end: `+=${maxScroll}`,
-          scrub: 1, // Add smoothing
-          invalidateOnRefresh: true,
-        }
-      });
-
-      // Animate bottom shutter
-      gsap.to(bottomBar, {
-        yPercent: 100,
-        ease: "none",
-        scrollTrigger: {
-          trigger: "body",
-          start: "top top",
-          end: `+=${maxScroll}`,
-          scrub: 1,
-          invalidateOnRefresh: true,
-        }
-      });
-
-      // Animate text overlay fade out (simpler than clip-path)
-      gsap.to(textOverlay, {
-        opacity: 0,
-        y: -50,
-        ease: "none",
-        scrollTrigger: {
-          trigger: "body",
-          start: "top top",
-          end: `+=${maxScroll}`,
-          scrub: 1,
-          invalidateOnRefresh: true,
-        }
-      });
+    // Animate top shutter
+    const topTrigger = gsap.to(topBarRef.current, {
+      yPercent: -100,
+      ease: "none",
+      scrollTrigger: {
+        trigger: "body",
+        start: "top top",
+        end: `+=${maxScroll}`,
+        scrub: true,
+      },
     });
 
-    // Refresh ScrollTrigger after setup
-    ScrollTrigger.refresh();
+    // Animate bottom shutter
+    const bottomTrigger = gsap.to(bottomBarRef.current, {
+      yPercent: 100,
+      ease: "none",
+      scrollTrigger: {
+        trigger: "body",
+        start: "top top",
+        end: `+=${maxScroll}`,
+        scrub: true,
+      },
+    });
+
+    // Animate text overlay clip-path
+    const textTrigger = gsap.to(textOverlayRef.current, {
+      onUpdate: function () {
+        const progress = this.progress();
+        const topShutterBottom = 50 - progress * 50;
+        const bottomShutterTop = 50 + progress * 50;
+        const clipPath = `polygon(0 0, 100% 0, 100% ${topShutterBottom}vh, 0 ${topShutterBottom}vh, 0 ${bottomShutterTop}vh, 100% ${bottomShutterTop}vh, 100% 100%, 0 100%)`;
+
+        if (textOverlayRef.current) {
+          textOverlayRef.current.style.clipPath = clipPath;
+        }
+      },
+      ease: "none",
+      scrollTrigger: {
+        trigger: "body",
+        start: "top top",
+        end: `+=${maxScroll}`,
+        scrub: true,
+      },
+    });
 
     // Cleanup
     return () => {
-      ctx.revert();
+      topTrigger.scrollTrigger?.kill();
+      bottomTrigger.scrollTrigger?.kill();
+      textTrigger.scrollTrigger?.kill();
+      topTrigger.kill();
+      bottomTrigger.kill();
+      textTrigger.kill();
     };
   }, []);
 
@@ -87,6 +79,10 @@ const ShutterOverlay = ({ children }: ShutterOverlayProps) => {
       <div
         ref={textOverlayRef}
         className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none"
+        style={{
+          opacity: 1,
+          transform: "translateY(0px)",
+        }}
       >
         <div className="text-center text-cocoa -mt-12">
           <h1 className="text-5xl md:text-7xl lg:text-9xl xl:text-[12rem] font-grante tracking-[0] leading-none whitespace-nowrap -mb-4">
@@ -102,14 +98,14 @@ const ShutterOverlay = ({ children }: ShutterOverlayProps) => {
       <div
         ref={topBarRef}
         className="fixed top-0 left-0 w-full bg-sand z-[90] overflow-hidden"
-        style={{ height: '50vh' }}
+        style={{ height: "50vh", transform: "translateY(0vh)" }}
       >
         <Noise
           patternSize={250}
           patternScaleX={1}
           patternScaleY={1}
-          patternRefreshInterval={5}
-          patternAlpha={20}
+          patternRefreshInterval={2}
+          patternAlpha={25}
         />
       </div>
 
@@ -117,14 +113,14 @@ const ShutterOverlay = ({ children }: ShutterOverlayProps) => {
       <div
         ref={bottomBarRef}
         className="fixed left-0 w-full bg-sand z-[90] overflow-hidden"
-        style={{ height: '50vh', top: '50vh' }}
+        style={{ height: "50vh", top: "50vh", transform: "translateY(0vh)" }}
       >
         <Noise
           patternSize={250}
           patternScaleX={1}
           patternScaleY={1}
-          patternRefreshInterval={5}
-          patternAlpha={20}
+          patternRefreshInterval={2}
+          patternAlpha={25}
         />
       </div>
 

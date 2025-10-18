@@ -8,7 +8,7 @@ import Main from "@/pages/Main";
 import BecomeAPartner from "@/pages/BecomeAPartner";
 import AccountPage from "@/pages/AccountPage";
 import NotFound from "@/pages/NotFound";
-import CartRentals from "@/components/marketing/CartRentals";
+import CartRentals from "@/components/sections/CartRentals";
 import { useLenis } from "@/hooks/useLenis";
 
 const router = createBrowserRouter([
@@ -22,11 +22,19 @@ const router = createBrowserRouter([
       { path: "become-a-partner", element: <BecomeAPartner /> },
       {
         path: "user-account",
-        element: <ProtectedRoute><AccountPage type="rider" /></ProtectedRoute>,
+        element: (
+          <ProtectedRoute>
+            <AccountPage type="rider" />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "partner-account",
-        element: <ProtectedRoute><AccountPage type="partner" /></ProtectedRoute>,
+        element: (
+          <ProtectedRoute>
+            <AccountPage type="partner" />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

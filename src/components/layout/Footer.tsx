@@ -7,6 +7,7 @@ import {
   Phone,
   Twitter,
 } from "lucide-react";
+import { WHATSAPP_NUMBER } from "@/lib/constants";
 
 const Footer = () => {
   return (
@@ -116,9 +117,9 @@ const Footer = () => {
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="w-4 h-4" />
-                <span className="text-sm">
-                  +501-XXX-XXXX
-                </span>
+                <a href={`tel:+${WHATSAPP_NUMBER}`} className="text-sm hover:text-foreground transition-colors">
+                  +{WHATSAPP_NUMBER}
+                </a>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4" />

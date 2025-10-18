@@ -1,9 +1,10 @@
 // src/pages/Home.tsx
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from "react";
 import { gsap } from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import About from "@/components/marketing/About";
-import Hero from "@/components/marketing/Hero";
+import About from "@/components/sections/About";
+import LongTermRentals from "@/components/sections/LongTermRentals";
+import Hero from "@/components/sections/Hero";
 import InteractiveMap from "@/components/layout/InteractiveMap";
 import MapPlaceholder from "@/components/layout/MapPlaceholder";
 import ShutterOverlay from "@/components/ui/ShutterOverlay";
@@ -11,15 +12,17 @@ import Section from "@/components/layout/Section";
 import VectorBg from "@/components/images/hero/vector-bg.svg";
 import Asset1 from "@/components/images/hero/asset1.svg";
 import LeftBird from "@/components/images/about/left.svg";
+import { HERO_LAYOUT } from "@/lib/constants";
 
 gsap.registerPlugin(ScrollTrigger);
-
 
 const Home = () => {
   // Check if Mapbox token is properly configured
   const hasValidMapboxToken = useMemo(() => {
     const token = import.meta.env.VITE_MAPBOX_TOKEN;
-    return token && token !== 'your-mapbox-token-here' && token.startsWith('pk.');
+    return (
+      token && token !== "your-mapbox-token-here" && token.startsWith("pk.")
+    );
   }, []);
 
   useEffect(() => {
@@ -34,7 +37,7 @@ const Home = () => {
           // Optimize: Use will-change and GPU acceleration
           gsap.set(el, {
             willChange: "transform",
-            force3D: true
+            force3D: true,
           });
 
           gsap.fromTo(
@@ -76,10 +79,18 @@ const Home = () => {
         {/* Global Background Container - Absolute positioned to specific parts */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           {/* Hero background - pins to top of page */}
-          <div className="absolute top-0 left-0 right-0 h-screen bg-cocoa"></div>
+          <div className="absolute top-0 left-0 right-0 h-screen"></div>
 
           {/* === BIRD RIGHT - pins to hero section === */}
-          <div className="absolute top-[675px] right-[-20%] lg:right-[-25%] w-[600px] md:w-[800px] lg:w-[1000px] h-[600px] md:h-[800px] lg:h-[1000px] rotate-[20deg] z-10 overflow-visible hidden sm:block">
+          <div
+            className="absolute z-10 overflow-visible hidden sm:block"
+            style={{
+              top: `${HERO_LAYOUT.BIRD_RIGHT_TOP}px`,
+              right: `${HERO_LAYOUT.BIRD_RIGHT_RIGHT}px`,
+              width: "600px",
+              height: "600px",
+            }}
+          >
             <img
               src={Asset1}
               alt="bird"
@@ -87,17 +98,22 @@ const Home = () => {
             />
           </div>
 
-          {/* Wave background - pins behind map section */}
-          <div className="absolute top-[800px] left-0 right-0 h-[1200px]">
-            <img
-              src={VectorBg}
-              alt=""
-              className="w-full h-full object-cover"
-            />
+          {/* Wave background - ENLARGED to cover everything */}
+          <div
+            className="absolute left-0 right-0"
+            style={{
+              top: `${HERO_LAYOUT.WAVE_BG_TOP}px`,
+              height: "3000px"  // Enlarged to cover all sections
+            }}
+          >
+            <img src={VectorBg} alt="" className="w-full h-full object-cover" />
           </div>
 
           {/* === TOUCAN LEFT - pins to About section === */}
-          <div className="absolute top-[1400px] left-[-50%] lg:left-[-40%] w-[800px] lg:w-[1200px] h-[800px] lg:h-[1800px] hidden md:block z-10">
+          <div
+            className="absolute left-[-50%] lg:left-[-50%] md:w-[1000px] lg:w-[1200px] h-[800px] sm:h-[800px] lg:h-[1800px] hidden sm:block z-10"
+            style={{ top: `${HERO_LAYOUT.TOUCAN_LEFT_TOP}px` }}
+          >
             <img
               src={LeftBird}
               alt="toucan"
@@ -112,29 +128,37 @@ const Home = () => {
         </Section>
 
         {/* Interactive Map Section - Overlays Hero with negative margin */}
-        <Section spacing="md" background="transparent" className="-mt-[475px] relative">
-          <div className="rounded-2xl shadow-2xl overflow-hidden relative bg-white z-20" style={{ height: '700px' }}>
-            {hasValidMapboxToken ? (
-              <InteractiveMap
-                pickup={null}
-                dropoff={null}
-                isLoading={false}
-                onMapClick={() => {}}
-                onRequestRide={() => {}}
-              />
-            ) : (
-              <MapPlaceholder />
-            )}
-          </div>
-        </Section>
+        <div style={{ marginTop: `${HERO_LAYOUT.MAP_NEGATIVE_MARGIN}px` }}>
+          <Section spacing="md" background="transparent" className="relative">
+            <div
+              className="rounded-2xl shadow-2xl overflow-hidden relative bg-white z-20"
+              style={{ height: `${HERO_LAYOUT.MAP_HEIGHT}px` }}
+            >
+              {hasValidMapboxToken ? (
+                <InteractiveMap
+                  pickup={null}
+                  dropoff={null}
+                  isLoading={false}
+                  onMapClick={() => {}}
+                  onRequestRide={() => {}}
+                />
+              ) : (
+                <MapPlaceholder />
+              )}
+            </div>
+          </Section>
+        </div>
 
-        {/* About Section - Standard spacing */}
+        {/* Original About Section - DROP A PIN, REQUEST A DRIVER, ENJOY THE CRUISE */}
         <Section spacing="md" background="beige" id="about">
-          <div className="absolute inset-0 bg-beige -z-10"/> 
+          <div className="absolute inset-0 bg-beige -z-10" />
           <About />
         </Section>
 
-       
+        {/* Long-Term Rentals Section - Brutalist Asymmetric Design */}
+        <Section spacing="none" background="transparent" id="rentals">
+          <LongTermRentals />
+        </Section>
       </div>
     </>
   );
