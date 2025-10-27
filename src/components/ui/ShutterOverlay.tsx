@@ -1,9 +1,6 @@
 import { useEffect, useRef, ReactNode } from "react";
 import { gsap } from "gsap";
-import ScrollTrigger from "gsap/ScrollTrigger";
 import Noise from "./Noise";
-
-gsap.registerPlugin(ScrollTrigger);
 
 interface ShutterOverlayProps {
   children?: ReactNode;
@@ -17,60 +14,60 @@ const ShutterOverlay = ({ children }: ShutterOverlayProps) => {
   useEffect(() => {
     const maxScroll = window.innerHeight * 0.5;
 
-    // Animate top shutter
-    const topTrigger = gsap.to(topBarRef.current, {
-      yPercent: -100,
-      ease: "none",
-      scrollTrigger: {
-        trigger: "body",
-        start: "top top",
-        end: `+=${maxScroll}`,
-        scrub: true,
-      },
+    // Use gsap.context() for automatic cleanup
+    const ctx = gsap.context(() => {
+      // Animate top shutter
+      gsap.to(topBarRef.current, {
+        yPercent: -100,
+        ease: "none",
+        scrollTrigger: {
+          trigger: "body",
+          start: "top top",
+          end: `+=${maxScroll}`,
+          scrub: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      // Animate bottom shutter
+      gsap.to(bottomBarRef.current, {
+        yPercent: 100,
+        ease: "none",
+        scrollTrigger: {
+          trigger: "body",
+          start: "top top",
+          end: `+=${maxScroll}`,
+          scrub: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      // Animate text overlay clip-path and opacity
+      gsap.to(textOverlayRef.current, {
+        opacity: 0,
+        onUpdate: function () {
+          const progress = this.progress();
+          const topShutterBottom = 50 - progress * 50;
+          const bottomShutterTop = 50 + progress * 50;
+          const clipPath = `polygon(0 0, 100% 0, 100% ${topShutterBottom}vh, 0 ${topShutterBottom}vh, 0 ${bottomShutterTop}vh, 100% ${bottomShutterTop}vh, 100% 100%, 0 100%)`;
+
+          if (textOverlayRef.current) {
+            textOverlayRef.current.style.clipPath = clipPath;
+          }
+        },
+        ease: "none",
+        scrollTrigger: {
+          trigger: "body",
+          start: "top top",
+          end: `+=${maxScroll}`,
+          scrub: 1,
+          invalidateOnRefresh: true,
+        },
+      });
     });
 
-    // Animate bottom shutter
-    const bottomTrigger = gsap.to(bottomBarRef.current, {
-      yPercent: 100,
-      ease: "none",
-      scrollTrigger: {
-        trigger: "body",
-        start: "top top",
-        end: `+=${maxScroll}`,
-        scrub: true,
-      },
-    });
-
-    // Animate text overlay clip-path
-    const textTrigger = gsap.to(textOverlayRef.current, {
-      onUpdate: function () {
-        const progress = this.progress();
-        const topShutterBottom = 50 - progress * 50;
-        const bottomShutterTop = 50 + progress * 50;
-        const clipPath = `polygon(0 0, 100% 0, 100% ${topShutterBottom}vh, 0 ${topShutterBottom}vh, 0 ${bottomShutterTop}vh, 100% ${bottomShutterTop}vh, 100% 100%, 0 100%)`;
-
-        if (textOverlayRef.current) {
-          textOverlayRef.current.style.clipPath = clipPath;
-        }
-      },
-      ease: "none",
-      scrollTrigger: {
-        trigger: "body",
-        start: "top top",
-        end: `+=${maxScroll}`,
-        scrub: true,
-      },
-    });
-
-    // Cleanup
-    return () => {
-      topTrigger.scrollTrigger?.kill();
-      bottomTrigger.scrollTrigger?.kill();
-      textTrigger.scrollTrigger?.kill();
-      topTrigger.kill();
-      bottomTrigger.kill();
-      textTrigger.kill();
-    };
+    // Cleanup - gsap.context() automatically kills all animations and ScrollTriggers
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -84,11 +81,11 @@ const ShutterOverlay = ({ children }: ShutterOverlayProps) => {
           transform: "translateY(0px)",
         }}
       >
-        <div className="text-center text-cocoa -mt-12">
+        <div className="text-center text-primary -mt-12">
           <h1 className="text-5xl md:text-7xl lg:text-9xl xl:text-[12rem] font-grante tracking-[0] leading-none whitespace-nowrap -mb-4">
             YOU BETTER BELIZE IT
           </h1>
-          <h2 className="text-3xl md:text-5xl lg:text-8xl text-cocoa font-kensington tracking-[0] leading-none -mt-4 -mb-8">
+          <h2 className="text-3xl md:text-5xl lg:text-8xl text-cocoa font-bold tracking-[0] leading-none -mt-7 -mb-8">
             ISLAND RIDES, INSTANTLY.
           </h2>
         </div>

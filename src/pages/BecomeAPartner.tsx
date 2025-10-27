@@ -31,7 +31,7 @@ const BecomeAPartner = () => {
         <div className="container mx-auto mb-12  px-4 relative z-10">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-6xl font-bold font-serif text-foreground mb-6">Partner with <span className="text-green">Caye Cruiser</span></h1>
-            <p className="text-xl text-muted-foreground mb-8 leading-relaxed">Join our network of local drivers and businesses to earn more, serve the community, and help us provide San Pedro's first organized ride-sharing service.</p>
+            <p className="text-xl text-muted-foreground mb-8 leading-relaxed">Join our network of local drivers and businesses to earn more, serve the community, and help us provide San Pedro&apos;s first organized ride-sharing service.</p>
             <Button size="lg" variant="link" onClick={() => handlePartnerContact("I'm interested in learning more about partnership opportunities with Caye Cruiser")}>Start Your Partnership Journey</Button>
           </div>
         </div>
@@ -39,7 +39,7 @@ const BecomeAPartner = () => {
       <section className="py-16 bg-muted">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {whyPartner.map((reason, index) => (<Card key={index} className="text-center hover:shadow-lg transition-shadow"><CardHeader><div className="w-12 h-12 bg-green/10 rounded-lg flex items-center justify-center mx-auto mb-4">{reason.icon}</div><CardTitle className="text-lg">{reason.title}</CardTitle></CardHeader><CardContent><p className="text-muted-foreground text-sm">{reason.description}</p></CardContent></Card>))}
+            {whyPartner.map((reason) => (<Card key={reason.title} className="text-center hover:shadow-lg transition-shadow"><CardHeader><div className="w-12 h-12 bg-green/10 rounded-lg flex items-center justify-center mx-auto mb-4">{reason.icon}</div><CardTitle className="text-lg">{reason.title}</CardTitle></CardHeader><CardContent><p className="text-muted-foreground text-sm">{reason.description}</p></CardContent></Card>))}
           </div>
         </div>
       </section>
@@ -47,7 +47,7 @@ const BecomeAPartner = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12"><h2 className="text-3xl md:text-4xl font-bold font-serif mb-4">Partnership Opportunities</h2><p className="text-lg text-muted-foreground max-w-2xl mx-auto">Choose the partnership model that fits your business or lifestyle.</p></div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {partnerTypes.map((partner, index) => (<Card key={index} className="h-full flex flex-col hover:shadow-xl transition-all duration-300"><CardHeader className="text-center"><div className="w-16 h-16 bg-med-purple/10 rounded-lg flex items-center justify-center mx-auto mb-4 text-med-purple">{partner.icon}</div><CardTitle className="text-xl font-serif">{partner.title}</CardTitle><p className="text-muted-foreground text-sm">{partner.description}</p></CardHeader><CardContent className="flex-grow"><div className="mb-6"><h4 className="font-semibold mb-3 text-med-purple">Benefits:</h4><ul className="space-y-2">{partner.benefits.map((benefit, i) => (<li key={i} className="flex items-start text-sm"><CheckCircle className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />{benefit}</li>))}</ul></div><div className="mb-6"><h4 className="font-semibold mb-3 text-med-purple">Requirements:</h4><ul className="space-y-2">{partner.requirements.map((req, i) => (<li key={i} className="flex items-start text-sm text-muted-foreground"><div className="w-2 h-2 bg-muted-foreground/50 rounded-full mr-2 mt-2 flex-shrink-0" />{req}</li>))}</ul></div></CardContent><div className="p-6 pt-0"><Button className="w-full" variant="link" onClick={() => handlePartnerContact(partner.ctaMessage)}>{partner.cta}</Button></div></Card>))}
+            {partnerTypes.map((partner) => (<Card key={partner.title} className="h-full flex flex-col hover:shadow-xl transition-all duration-300"><CardHeader className="text-center"><div className="w-16 h-16 bg-med-purple/10 rounded-lg flex items-center justify-center mx-auto mb-4 text-med-purple">{partner.icon}</div><CardTitle className="text-xl font-serif">{partner.title}</CardTitle><p className="text-muted-foreground text-sm">{partner.description}</p></CardHeader><CardContent className="flex-grow"><div className="mb-6"><h4 className="font-semibold mb-3 text-med-purple">Benefits:</h4><ul className="space-y-2">{partner.benefits.map((benefit) => (<li key={benefit} className="flex items-start text-sm"><CheckCircle className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />{benefit}</li>))}</ul></div><div className="mb-6"><h4 className="font-semibold mb-3 text-med-purple">Requirements:</h4><ul className="space-y-2">{partner.requirements.map((req) => (<li key={req} className="flex items-start text-sm text-muted-foreground"><div className="w-2 h-2 bg-muted-foreground/50 rounded-full mr-2 mt-2 flex-shrink-0" />{req}</li>))}</ul></div></CardContent><div className="p-6 pt-0"><Button className="w-full" variant="link" onClick={() => handlePartnerContact(partner.ctaMessage)}>{partner.cta}</Button></div></Card>))}
           </div>
         </div>
       </section>
@@ -55,7 +55,7 @@ const BecomeAPartner = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12"><h2 className="text-3xl md:text-4xl font-bold font-serif mb-4">Partner Support & Features</h2><p className="text-lg text-muted-foreground max-w-3xl mx-auto">We provide comprehensive support to ensure your success as a Caye Cruiser partner.</p></div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {supportFeatures.map((feature, index) => (<Card key={index} className="text-center hover:shadow-lg transition-shadow border-border/50"><CardHeader><div className="w-12 h-12 bg-green/10 rounded-lg flex items-center justify-center mx-auto mb-4 text-green">{feature.icon}</div><CardTitle className="text-lg">{feature.title}</CardTitle></CardHeader><CardContent><p className="text-muted-foreground text-sm">{feature.description}</p></CardContent></Card>))}
+            {supportFeatures.map((feature) => (<Card key={feature.title} className="text-center hover:shadow-lg transition-shadow border-border/50"><CardHeader><div className="w-12 h-12 bg-green/10 rounded-lg flex items-center justify-center mx-auto mb-4 text-green">{feature.icon}</div><CardTitle className="text-lg">{feature.title}</CardTitle></CardHeader><CardContent><p className="text-muted-foreground text-sm">{feature.description}</p></CardContent></Card>))}
           </div>
         </div>
       </section>

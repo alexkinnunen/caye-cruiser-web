@@ -23,15 +23,6 @@ export const MAP_BOUNDS = {
   west: -87.98,
 };
 
-// Hero Page Layout Constants
-export const HERO_LAYOUT = {
-  BIRD_RIGHT_TOP: 675,
-  WAVE_BG_TOP: 550,
-  TOUCAN_LEFT_TOP: 1050,
-  MAP_NEGATIVE_MARGIN: -475,
-  MAP_HEIGHT: 700,
-} as const;
-
 // ============================================================================
 // Application Types
 // ============================================================================

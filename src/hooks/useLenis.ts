@@ -35,9 +35,6 @@ export const useLenis = () => {
     // Add Lenis to gsap ticker for smooth updates
     gsap.ticker.add(tickerCallback);
 
-    // Ensure ticker doesn't lag behind
-    gsap.ticker.lagSmoothing(0);
-
     // Cleanup
     return () => {
       lenis.destroy();
