@@ -8,6 +8,7 @@ import Main from "@/pages/Main";
 import BecomeAPartner from "@/pages/BecomeAPartner";
 import AccountPage from "@/pages/AccountPage";
 import NotFound from "@/pages/NotFound";
+import TropicalAnimationDemo from "@/pages/TropicalAnimationDemo";
 import CartRentals from "@/components/sections/CartRentals";
 import { useLenis } from "@/hooks/useLenis";
 
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
       { index: true, element: <Main /> },
       { path: "cart-rentals", element: <CartRentals /> },
       { path: "become-a-partner", element: <BecomeAPartner /> },
+      { path: "tropical-animation-demo", element: <TropicalAnimationDemo /> },
       {
         path: "user-account",
         element: (
