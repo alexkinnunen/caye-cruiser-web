@@ -9,6 +9,7 @@ import InteractiveMap from "@/components/layout/InteractiveMap";
 import MapPlaceholder from "@/components/layout/MapPlaceholder";
 import ShutterOverlay from "@/components/ui/ShutterOverlay";
 import Section from "@/components/layout/Section";
+import TropicalAnimation from "@/components/animations/TropicalAnimation";
 import VectorBg from "@/components/images/hero/vector-bg.svg";
 import Asset1 from "@/components/images/hero/asset1.svg";
 import LeftBird from "@/components/images/about/left.svg";
@@ -78,6 +79,21 @@ const Home = () => {
       <div className="w-full bg-beige relative overflow-x-hidden">
         {/* Global Background Container - Absolute positioned to specific parts */}
         <div className="absolute inset-0 z-0 pointer-events-none">
+          {/* Tropical Animation Layer - Behind everything */}
+          <div className="absolute top-0 left-0 right-0" style={{ height: "3000px", opacity: 0.4 }}>
+            <TropicalAnimation
+              height="3000px"
+              parallaxIntensity={0.3}
+              showBirds={true}
+              showPalmTrees={true}
+              showWaves={true}
+              showClouds={true}
+              showSun={true}
+              enableScrollParallax={true}
+              zIndex={0}
+            />
+          </div>
+
           {/* Hero background - pins to top of page */}
           <div className="absolute top-0 left-0 right-0 h-screen"></div>
 
