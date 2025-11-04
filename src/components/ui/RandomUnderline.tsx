@@ -1,8 +1,5 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
-
-gsap.registerPlugin(DrawSVGPlugin);
 
 interface RandomUnderlineProps {
   children: React.ReactNode;
@@ -10,7 +7,7 @@ interface RandomUnderlineProps {
   className?: string;
 }
 
-const RandomUnderline = ({ children, color = "#ffffff", className = "" }: RandomUnderlineProps) => { // Lime/Primary color
+const RandomUnderline = ({ children, color = "hsl(0, 0%, 100%)", className = "" }: RandomUnderlineProps) => { // White/Primary foreground
   const containerRef = useRef<HTMLSpanElement>(null);
   const boxRef = useRef<HTMLDivElement>(null);
   const enterTweenRef = useRef<gsap.core.Tween | null>(null);
@@ -44,10 +41,17 @@ const RandomUnderline = ({ children, color = "#ffffff", className = "" }: Random
 
         const path = svg.querySelector('path');
         if (path) {
-          gsap.set(path, { drawSVG: '0%' });
+          // Get path length for stroke animation
+          const pathLength = path.getTotalLength();
+
+          // Set initial state: hidden stroke
+          path.style.strokeDasharray = `${pathLength}`;
+          path.style.strokeDashoffset = `${pathLength}`;
+
+          // Animate stroke drawing using GSAP
           enterTweenRef.current = gsap.to(path, {
             duration: 0.8,
-            drawSVG: '100%',
+            strokeDashoffset: 0,
             ease: 'power2.inOut',
             delay: 0.3, // Small delay before drawing
           });

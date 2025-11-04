@@ -24,7 +24,7 @@ const WavyMarquee = ({
   pathData = "",
   fontSize = 0,
   textColor = "",
-  accentColor = "#4D3C2E", // Cocoa
+  accentColor = "hsl(17, 33%, 32%)", // Cocoa
   autoPlay = true,
   useScrollTrigger = false,
   reverse = false,
@@ -121,7 +121,7 @@ const WavyMarquee = ({
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 2400 250"
+        viewBox="0 0 2400 260"
         className="w-full h-auto block"
         preserveAspectRatio="none"
         style={{ overflow: "visible", display: "block" }}
@@ -144,13 +144,13 @@ const WavyMarquee = ({
           />
         </defs>
         <text
-          className="font-sans"
+          className="font-black font-sans"
           dominantBaseline="middle"
           textAnchor="start"
           style={{
             fontSize: `${fontSize}px`,
-            fontWeight: 750,
-            letterSpacing: "-0.04em",
+            fontWeight: 800,
+            letterSpacing: "0.01em",
           }}
         >
           <textPath

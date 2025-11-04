@@ -2,12 +2,50 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Table of Contents
+
+- [Response Style Preferences](#response-style-preferences)
+- [Task Verification Protocol](#task-verification-protocol)
+- [Project Overview](#project-overview)
+- [Tech Stack](#tech-stack)
+- [Development Commands](#development-commands)
+- [Environment Setup](#environment-setup)
+- [Architecture](#architecture)
+  - [High-Level Structure](#high-level-structure)
+  - [Routes](#routes)
+  - [Key Architectural Patterns](#key-architectural-patterns)
+  - [Page Flow](#page-flow)
+- [Design System](#design-system)
+  - [Colors](#colors-hsl-css-variables)
+  - [Fonts](#fonts)
+  - [Custom Utilities](#custom-utilities)
+  - [State Management](#state-management)
+- [Implementation Status](#implementation-status)
+- [Critical Rules & Gotchas](#critical-rules--gotchas)
+- [Performance Considerations](#performance-considerations)
+- [Common Tasks](#common-tasks)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Documentation](#documentation)
+- [Known Issues & Limitations](#known-issues--limitations)
+- [Next Steps](#next-steps-recommended-priority)
+- [Troubleshooting](#troubleshooting)
+- [Support](#support)
+
 ## Response Style Preferences
 
-- **Concise summaries**: Provide brief summaries of changes without including full code blocks in explanations
-- **Focus on intent**: Explain what changed and why, not the literal code content
-- **Reference locations**: Use file paths and line numbers (e.g., `ScrollingCruise.tsx:15-30`) instead of pasting code
-- **Action-oriented**: Lead with what was done, followed by brief reasoning
+- Brief summaries without full code blocks - use file:line references (e.g., `ScrollingCruise.tsx:15-30`)
+- Focus on intent (what/why) not literal code content
+- Action-oriented: state what was done, then brief reasoning
+
+## Task Verification Protocol
+
+After visual changes, functional behavior, or complex logic:
+
+1. **Always ask for verification** - "Can you verify this is working as expected?"
+2. **Wait for user confirmation** before marking complete
+3. **Never assume success** for UI/animations/multi-file changes
+4. **Loop prevention** - After 2+ failed attempts, ask user to describe what they see or provide screenshot
 
 ## Project Overview
 
@@ -42,10 +80,10 @@ npm run lint         # Lint code with ESLint
 
 Create `.env.local` from `.env.example`. All variables are **optional in development** - the app gracefully degrades with placeholders:
 
-- `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` - Backend/auth (see `src/lib/client.ts` for fallback)
-- `VITE_MAPBOX_TOKEN` - Maps (falls back to `MapPlaceholder` component)
-- `VITE_STRIPE_PUBLISHABLE_KEY` - Payments
-- `VITE_WHATSAPP_NUMBER` - WhatsApp Business integration
+- `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` - Backend/auth (without these: shows placeholder auth dialog, no database access)
+- `VITE_MAPBOX_TOKEN` - Maps (without this: renders `MapPlaceholder` component with message)
+- `VITE_STRIPE_PUBLISHABLE_KEY` - Payments (without this: payment flows disabled)
+- `VITE_WHATSAPP_NUMBER` - WhatsApp Business integration (without this: notification features disabled)
 
 **Key Pattern**: Environment validation in `src/lib/env.ts` uses Zod with optional schema in dev, required in production.
 
@@ -253,7 +291,14 @@ In `src/index.css:228+`:
 **Integrations**:
 - Mapbox (configured, basic map working)
 - Stripe (configured, not integrated into flows)
-- WhatsApp via n8n (7 workflows defined but not connected)
+- WhatsApp via n8n (7 workflows defined in `n8n-workflow/` directory but not connected):
+  - `database/ride-logger.json` - Logs ride events to database
+  - `database/user-sync.json` - Syncs user data
+  - `integrations/analytics-sync.json` - Analytics integration
+  - `integrations/stripe-webhook.json` - Stripe payment webhooks
+  - `whatsapp/notification-sender.json` - Sends WhatsApp notifications
+  - `whatsapp/ride-dispatcher.json` - Dispatches ride requests to partners
+  - `whatsapp/webhook-processor.json` - Processes incoming WhatsApp webhooks
 
 ### ❌ Not Yet Implemented
 
@@ -306,6 +351,17 @@ In `src/index.css:228+`:
 - Extract business logic to custom hooks
 - Component-first architecture
 
+## Performance Considerations
+
+**Bundle Size**: Vite auto code-splitting. Large deps: GSAP (~50KB), Mapbox (~200KB), Stripe (~25KB). Lazy load non-critical routes with `React.lazy()`. Monitor with `npm run build`.
+
+**Optimizations**:
+- Images: WebP format, optimize with ImageOptim
+- Code splitting: Lazy load Map/Stripe on-demand
+- Tree shaking: Import specific components (e.g., `import { Button } from "@/components/ui/button"`)
+- GPU acceleration: Use `will-change: transform` + `force3D: true` on animating elements only
+- Minimize re-renders: `React.memo()`, debounce handlers, `IntersectionObserver` for lazy loading
+
 ## Common Tasks
 
 ### Add a New Page
@@ -341,6 +397,31 @@ Edit CSS variables in `src/index.css:20-58` (HSL format)
 1. Update font imports in `src/index.css:1-18`
 2. Modify CSS variables in `src/index.css:75-78`
 3. Update Tailwind config if needed in `tailwind.config.ts`
+
+## Testing
+
+**Status**: Not yet implemented.
+
+**Planned Stack**:
+- Unit/Component: Vitest + React Testing Library (AuthProvider, forms, validation)
+- E2E: Playwright/Cypress (signup, booking, payments)
+- Visual: Storybook + Chromatic (optional)
+
+**Commands** (to be configured): `npm run test`, `npm run test:watch`, `npm run test:coverage`, `npm run test:e2e`
+
+**Best Practices**: Test user behavior not implementation, mock Supabase, use data-testid, >80% coverage for critical paths
+
+## Deployment
+
+**Status**: Not deployed. **Platform**: Vercel recommended.
+
+**Build**: `npm run build` → `dist/` (Node 18.x+)
+
+**Env Vars Required** (production): `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_MAPBOX_TOKEN`, `VITE_STRIPE_PUBLISHABLE_KEY`, `VITE_WHATSAPP_NUMBER`
+
+**Pre-Deploy Checklist**: Env vars configured, Supabase migrations + RLS policies, Stripe webhooks, n8n workflows, SSL, error tracking (Sentry), analytics
+
+**Optimizations**: Vercel compression (Brotli/Gzip), CDN caching, image optimization, CSP headers, monitoring
 
 ## Documentation
 
@@ -434,13 +515,50 @@ Edit CSS variables in `src/index.css:20-58` (HSL format)
 4. Performance optimization
 5. Production deployment
 
-## Support
+## Troubleshooting
 
-When encountering issues:
-1. Check this CLAUDE.md for high-level patterns and status
-2. Consult `.claude/DEVELOPER_GUIDE.md` for detailed customization
-3. Check `.claude/docs/GSAP-SCROLLTRIGGER-IMPLEMENTATION.md` for animation issues
-4. Review debugging logs in `.claude/SHUTTER_OVERLAY_ANIMATION_ATTEMPTS.md` for similar issues
-5. Consult relevant agent documentation in `.claude/docs/agents/`
+### Build & Development
 
-**Last Updated**: October 2025
+**Build fails (animations)**: ❌ No ScrollSmoother imports. ✅ Use `gsap.context()` + `ctx?.revert()` cleanup. See GSAP-SCROLLTRIGGER-IMPLEMENTATION.md
+
+**Dev server won't start**: Check Node 18.x+ (`node --version`), clear/reinstall node_modules, check port 5173 conflicts
+
+**TypeScript errors**: Regenerate Supabase types, restart TS server
+
+### Feature-Specific
+
+**Map**: Check `VITE_MAPBOX_TOKEN` set, valid token, falls back to MapPlaceholder. Console errors: 401=invalid, 403=rate limit
+
+**Auth**: Verify Supabase env vars set, `isSupabaseConfigured()` returns true, project active. Shows placeholder dialog if unavailable
+
+**Scroll animations**: ✅ Lenis initialized (`App.tsx`), ScrollTrigger.refresh() after DOM updates, proper selectors. ❌ No `scroller` property. Use `markers: true` to debug
+
+**Stripe**: Check env var (`pk_test_...`), console for errors. Integration incomplete
+
+### Performance
+
+**Slow load**: Check bundle (`npm run build`), code split heavy components, optimize images (WebP), use Lighthouse
+
+**Janky animations**: ✅ `will-change: transform` + `force3D: true`, reduce concurrent animations, avoid pinning in grid/flex
+
+**Memory leaks**: ✅ Match `gsap.context()` with `ctx?.revert()`, verify useEffect cleanup, use React DevTools Profiler
+
+### Common Errors
+
+**"Cannot read property 'scrollTrigger' of undefined"**: Add `gsap.registerPlugin(ScrollTrigger)` at top
+
+**"ResizeObserver loop..."**: Harmless ScrollTrigger/Lenis warning, ignore in dev
+
+**"Supabase client not configured"**: Expected without env vars, shows placeholders (normal)
+
+**"Invalid hook call..."**: Multiple React instances. Fix: `npm dedupe` or reinstall node_modules
+
+### Getting Help
+
+1. This CLAUDE.md (patterns & status)
+2. `.claude/DEVELOPER_GUIDE.md` (customization)
+3. `.claude/docs/GSAP-SCROLLTRIGGER-IMPLEMENTATION.md` (animations)
+4. `.claude/SHUTTER_OVERLAY_ANIMATION_ATTEMPTS.md` (debugging examples)
+5. `.claude/docs/agents/` (specialized topics)
+
+**Last Updated**: November 2025

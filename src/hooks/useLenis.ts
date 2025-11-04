@@ -27,18 +27,21 @@ export const useLenis = () => {
     // Integrate Lenis with GSAP ScrollTrigger
     lenis.on('scroll', ScrollTrigger.update);
 
-    // Store ticker callback reference for proper cleanup
-    const tickerCallback = (time: number) => {
-      lenis.raf(time * 1000); // Convert gsap time to milliseconds
-    };
+    // Request animation frame for Lenis
+    let rafId: number;
+    function raf(time: number) {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    }
+    rafId = requestAnimationFrame(raf);
 
-    // Add Lenis to gsap ticker for smooth updates
-    gsap.ticker.add(tickerCallback);
+    // Refresh ScrollTrigger after Lenis is initialized
+    gsap.ticker.lagSmoothing(0);
 
     // Cleanup
     return () => {
       lenis.destroy();
-      gsap.ticker.remove(tickerCallback);
+      cancelAnimationFrame(rafId);
     };
   }, []);
 };

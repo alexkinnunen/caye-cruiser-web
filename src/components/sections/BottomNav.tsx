@@ -4,7 +4,6 @@ const BottomNav = () => {
   const location = useLocation();
   const navLinks = [
     { name: "CRUISE", path: "/" },
-    { name: "CART RENTALS", path: "/cart-rentals" },
     { name: "PARTNER WITH US", path: "/become-a-partner" },
   ];
 

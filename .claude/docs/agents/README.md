@@ -6,21 +6,23 @@ This directory contains documentation for specialized AI agents that can assist 
 
 ### 1. Animation Agent
 **File:** `animation-agent.md`
-**Specialty:** GSAP, ScrollTrigger, ScrollSmoother, and animation effects
+**Specialty:** GSAP, ScrollTrigger, and Lenis smooth scrolling
 
 **Use for:**
 - Implementing scroll-based animations
 - Creating timeline animations
-- Debugging ScrollTrigger conflicts
+- Debugging ScrollTrigger issues
 - Hero section animations
 - Page transitions
 - Parallax effects
 
 **Key Rules:**
-- Always use `scroller: "#smooth-content"` with ScrollTrigger
-- Use 0-1 timeline positioning with scrub
-- No pinning in grid/flex layouts
-- Read `SCROLL_ANIMATION_LESSONS_LEARNED.md` before implementing
+- ❌ NO ScrollSmoother - Use Lenis + Standard ScrollTrigger
+- ❌ NO `scroller` property - Lenis handles document-level scrolling
+- ✅ Use `gsap.context()` for cleanup
+- ✅ Use 0-1 timeline positioning with scrub
+- ✅ GPU acceleration with `will-change` and `force3D`
+- Read `.claude/docs/GSAP-SCROLLTRIGGER-IMPLEMENTATION.md` before implementing
 
 ---
 
@@ -161,12 +163,13 @@ If you're unsure which agent to use:
 
 ## Related Documentation
 
-- **Project Overview**: `.claude/MASTER_PROMPT.md`
-- **Technical Specs**: `.claude/PROJECT_SPECIFICATION.md`
-- **Animation Guidelines**: `SCROLL_ANIMATION_LESSONS_LEARNED.md`
-- **Figma Workflow**: `.claude/figma-to-standalone-workflow.md`
+- **Main Guide**: `.claude/CLAUDE.md` - Project overview, architecture, critical rules
+- **Developer Guide**: `.claude/DEVELOPER_GUIDE.md` - Customization reference
+- **Animation Guide**: `.claude/docs/GSAP-SCROLLTRIGGER-IMPLEMENTATION.md` - Complete animation implementation
+- **Debugging Examples**: `.claude/SHUTTER_OVERLAY_ANIMATION_ATTEMPTS.md` - Real debugging cases
+- **Figma Workflow**: `.claude/figma-to-standalone-workflow.md` - Design-to-code process
 
 ---
 
-**Last Updated:** October 2025
-**Agents Version:** 1.0.0
+**Last Updated:** November 2025
+**Agents Version:** 2.0.0

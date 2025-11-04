@@ -4,18 +4,14 @@ import { gsap } from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import AboutSection from "@/components/sections/AboutSection";
 import HeroSection from "@/components/sections/HeroSection";
-import Testimonials from "@/components/sections/Testimonials";
 import Noise from "@/components/ui/Noise";
-import LongTermRentals from "@/components/sections/LongTermRentals";
-import WavyMarqueeSection from "@/components/sections/WavyMarqueeSection";
-import QuickFacts from "@/components/sections/QuickFacts";
-import ShutterOverlay from "@/components/ui/ShutterOverlay";
+import LongTermRentals from "@/components/sections/LongTermCTA";
+import InteractiveMap from "@/components/sections/InteractiveMap";
+import TaglineSection from "@/components/sections/HowToBar";
+import AboutUsSection from "@/components/sections/AboutUsSection";
+import Footer from "@/components/sections/Footer";
 
 const Home = () => {
-  useEffect(() => {
-    // Scroll to top on mount
-    window.scrollTo(0, 0);
-  }, []);
 
   useEffect(() => {
     let ctx: gsap.Context | null = null;
@@ -65,19 +61,26 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="overflow-x-hidden">
-    <ShutterOverlay />
+    <div className="overflow-x-hidden overflow-y-auto w-full max-w-full">
       <div className="fixed inset-0 z-50 pointer-events-none">
         <Noise patternAlpha={10} patternRefreshInterval={3} />
       </div>
-        {/* Spacer for Shutter Animation */}
-        <div className="h-32" />
+      <div className="fixed inset-0 z-0">
         <HeroSection />
+      </div>
+      {/* Floating sections container - scrolls over fixed Hero */}
+      <div className="relative z-10 w-full max-w-full pt-[100vh]">
+        <TaglineSection />
+        <InteractiveMap />
+         <AboutUsSection />
         <AboutSection />
-        <QuickFacts />
-        <Testimonials />
-        <WavyMarqueeSection />
+       
         <LongTermRentals />
+      
+        <div className="relative z-20 w-full max-w-full]">
+        <Footer />
+        </div>
+      </div>
     </div>
   );
 };

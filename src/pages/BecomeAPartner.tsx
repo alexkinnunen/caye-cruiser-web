@@ -1,65 +1,305 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Building2, Car, CheckCircle, Clock, DollarSign, Heart, MapPin, Shield, Smartphone, TrendingUp, Users, Zap } from "lucide-react";
+import { useRef } from "react";
+import { CheckCircle } from "lucide-react";
+import TestImage2 from "@/components/images/custom/three-birds.webp";
+import BottomNav from "@/components/sections/BottomNav";
+import Footer from "@/components/sections/Footer";
+import wiggleBg from "@/components/images/figma/wiggle-bg.svg";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { useHoverAnimation } from "@/hooks/useHoverAnimation";
+import { gsap } from "gsap";
 
 const BecomeAPartner = () => {
   const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER;
+  const leftButtonRef = useRef<HTMLDivElement>(null);
+  const middleButtonRef = useRef<HTMLDivElement>(null);
+  const rightButtonRef = useRef<HTMLDivElement>(null);
+  const heroImageRef = useRef<HTMLImageElement>(null);
+    const imageRef = useRef<HTMLImageElement>(null);
+      const valuesSectionRef = useRef<HTMLDivElement>(null);
+
+
+
   const partnerTypes = [
-    { title: "Individual Drivers", icon: <Users className="w-8 h-8" />, description: "Local residents with golf carts looking to earn flexible income", benefits: ["70% commission on every ride", "Flexible scheduling around your life", "Use your own golf cart", "Community engagement opportunities", "Tourist interaction and local pride"], requirements: ["Valid driver's license (18+ years)", "Local San Pedro residency", "Golf cart with current insurance", "Clean driving record", "Smartphone with WhatsApp"], cta: "Start Driving", ctaMessage: "I'm interested in becoming a Caye Cruiser driver" },
-    { title: "Golf Cart Rental Companies", icon: <Car className="w-8 h-8" />, description: "Established rental businesses seeking additional revenue streams", benefits: ["Additional income from idle inventory", "Reduced wear on premium rental carts", "Data insights on demand patterns", "Marketing reach to new customers", "Revenue sharing: 70% partner, 30% platform"], requirements: ["Established golf cart rental business", "Fleet of 5+ available carts", "Current business licenses", "Comprehensive insurance coverage", "Commitment to training drivers"], cta: "Partner with Us", ctaMessage: "I represent a golf cart rental company interested in partnering" },
-    { title: "Hotels & Resorts", icon: <Building2 className="w-8 h-8" />, description: "Accommodation providers wanting to enhance guest services", benefits: ["Enhanced guest transportation services", "Reduced front desk coordination", "Commission sharing opportunities", "Preferred booking status for guests", "Improved guest satisfaction scores"], requirements: ["Licensed accommodation business", "Guest capacity of 20+ rooms", "Concierge or front desk services", "Commitment to promoting service", "Guest feedback participation"], cta: "Enhance Guest Experience", ctaMessage: "I'm interested in a hotel partnership with Caye Cruiser" },
+    {
+      title: "INDIVIDUAL DRIVERS",
+      description: "Local residents with golf carts looking to earn flexible income",
+      benefits: [
+        "70% commission on every ride",
+        "Flexible scheduling around your life",
+        "Use your own golf cart",
+        "Community engagement opportunities",
+        "Tourist interaction and local pride",
+      ],
+      requirements: [
+        "Valid driver's license (18+ years)",
+        "Local San Pedro residency",
+        "Golf cart with current insurance",
+        "Clean driving record",
+        "Smartphone with WhatsApp",
+      ],
+      cta: "START DRIVING",
+      ctaMessage: "I'm interested in becoming a Caye Cruiser driver",
+      bgColor: "bg-sand",
+      textColor: "text-cocoa",
+      headerColor:"text-cocoa",
+    },
+    {
+      title: "RENTAL COMPANIES",
+      description: "Established rental businesses seeking additional revenue streams",
+      benefits: [
+        "Additional income from idle inventory",
+        "Reduced wear on premium rental carts",
+        "Data insights on demand patterns",
+        "Marketing reach to new customers",
+        "Revenue sharing: 70% partner, 30% platform",
+      ],
+      requirements: [
+        "Established golf cart rental business",
+        "Fleet of 5+ available carts",
+        "Current business licenses",
+        "Comprehensive insurance coverage",
+        "Commitment to training drivers",
+      ],
+      cta: "PARTNER WITH US",
+      ctaMessage: "I represent a golf cart rental company interested in partnering",
+     bgColor: "bg-secondary",
+      textColor: "text-sand",
+            headerColor: "text-sand",
+
+ 
+ 
+
+    },
+    {
+      title: "HOTELS & RESORTS",
+      description: "Accommodation providers wanting to enhance guest services",
+      benefits: [
+        "Enhanced guest transportation services",
+        "Reduced front desk coordination",
+        "Commission sharing opportunities",
+        "Preferred booking status for guests",
+        "Improved guest satisfaction scores",
+      ],
+      requirements: [
+        "Licensed accommodation business",
+        "Guest capacity of 20+ rooms",
+        "Concierge or front desk services",
+        "Commitment to promoting service",
+        "Guest feedback participation",
+      ],
+      cta: "ENHANCE GUEST EXPERIENCE",
+      ctaMessage: "I'm interested in a hotel partnership with Caye Cruiser",
+  
+      bgColor: "bg-cocoa",
+      textColor: "text-sand",
+            headerColor: "text-sand",
+
+    },
   ];
-  const whyPartner = [
-    { icon: <TrendingUp className="w-6 h-6 text-green" />, title: "Growing Market", description: "20,000+ residents and thousands of tourists year-round on a 2.5 square mile island" },
-    { icon: <Smartphone className="w-6 h-6 text-green" />, title: "WhatsApp Integration", description: "Easy-to-use platform that locals and tourists already know and trust" },
-    { icon: <MapPin className="w-6 h-6 text-green" />, title: "First-Mover Advantage", description: "Be part of the first organized ride-sharing system in San Pedro" },
-    { icon: <Heart className="w-6 h-6 text-green" />, title: "Community Impact", description: "Help solve real transportation challenges for locals and tourists alike" },
-  ];
-  const supportFeatures = [
-    { icon: <Shield className="w-6 h-6" />, title: "Insurance Coverage", description: "Comprehensive insurance protection for all partners and passengers" },
-    { icon: <Clock className="w-6 h-6" />, title: "24/7 Support", description: "Round-the-clock customer support for partners and riders" },
-    { icon: <Zap className="w-6 h-6" />, title: "Real-Time Tracking", description: "GPS tracking and automated matching system for efficiency" },
-    { icon: <DollarSign className="w-6 h-6" />, title: "Transparent Payments", description: "Clear commission structure with prompt payment processing" },
-  ];
+
   const handlePartnerContact = (message: string) => {
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank");
+    window.open(
+      `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`,
+      "_blank"
+    );
   };
 
+  const handleLeftButtonHover = useHoverAnimation(leftButtonRef, { scale: 1.05 });
+  const handleMiddleButtonHover = useHoverAnimation(middleButtonRef, { scale: 1.05 });
+  const handleRightButtonHover = useHoverAnimation(rightButtonRef, { scale: 1.05 });
+
+  // Hero image animation - slide in from right to left
+  useScrollAnimation(() => {
+    if (!heroImageRef.current) return;
+
+    gsap.fromTo(
+      heroImageRef.current,
+      {
+        x: 100,
+        opacity: 0,
+      },
+      {
+        x: 0,
+        opacity: 1,
+        duration: 1.2,
+        ease: "power3.out",
+        delay: 0.5,
+      }
+    );
+  }, []);
+
   return (
-    <>
-      <section>
-        <div className="container mx-auto mb-12  px-4 relative z-10">
-          <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-bold font-serif text-foreground mb-6">Partner with <span className="text-green">Caye Cruiser</span></h1>
-            <p className="text-xl text-muted-foreground mb-8 leading-relaxed">Join our network of local drivers and businesses to earn more, serve the community, and help us provide San Pedro&apos;s first organized ride-sharing service.</p>
-            <Button size="lg" variant="link" onClick={() => handlePartnerContact("I'm interested in learning more about partnership opportunities with Caye Cruiser")}>Start Your Partnership Journey</Button>
-          </div>
+    <div className="overflow-x-hidden pb-20">
+      {/* Parallax Hero Section */}
+      <div className="relative w-full h-screen overflow-hidden">
+        {/* Fixed Parallax Background */}
+        <div className="fixed top-0 left-0 w-full h-screen bg-cocoa" style={{ zIndex: 0 }}>
+          <div
+            className="absolute inset-0 opacity-20"
+            style={{
+              backgroundImage: `url(${wiggleBg})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
         </div>
-      </section>
-      <section className="py-16 bg-muted">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {whyPartner.map((reason) => (<Card key={reason.title} className="text-center hover:shadow-lg transition-shadow"><CardHeader><div className="w-12 h-12 bg-green/10 rounded-lg flex items-center justify-center mx-auto mb-4">{reason.icon}</div><CardTitle className="text-lg">{reason.title}</CardTitle></CardHeader><CardContent><p className="text-muted-foreground text-sm">{reason.description}</p></CardContent></Card>))}
+
+        {/* Fixed Hero Content */}
+        <div className="fixed top-0 left-0 w-full h-screen flex justify-between px-10" style={{ zIndex: 1 }}>
+          <div className="w-1/2 mt-60 text-left">
+            <h1
+              className="font-grante uppercase leading-none tracking-[0] text-secondary"
+              style={{
+                fontSize: "clamp(3rem, 12vw, 12rem)",
+              }}
+            >
+              PARTNER WITH US
+            </h1>
+            <p className="text-sand max-w-2x1 text-xl font-medium leading-relaxed">
+              Join our network of local drivers and businesses to earn more,
+              serve the community, and help us provide San Pedro's first
+              organized ride-sharing service.
+            </p>
+          <img
+            ref={imageRef}
+            src={TestImage2}
+            className="absolute w-full h-full flex bottom-0 left-[450px] justify-between"
+            alt="Beach drinks"
+          />
+
           </div>
+
         </div>
-      </section>
-      <section className="py-16 bg-muted/60">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12"><h2 className="text-3xl md:text-4xl font-bold font-serif mb-4">Partnership Opportunities</h2><p className="text-lg text-muted-foreground max-w-2xl mx-auto">Choose the partnership model that fits your business or lifestyle.</p></div>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {partnerTypes.map((partner) => (<Card key={partner.title} className="h-full flex flex-col hover:shadow-xl transition-all duration-300"><CardHeader className="text-center"><div className="w-16 h-16 bg-med-purple/10 rounded-lg flex items-center justify-center mx-auto mb-4 text-med-purple">{partner.icon}</div><CardTitle className="text-xl font-serif">{partner.title}</CardTitle><p className="text-muted-foreground text-sm">{partner.description}</p></CardHeader><CardContent className="flex-grow"><div className="mb-6"><h4 className="font-semibold mb-3 text-med-purple">Benefits:</h4><ul className="space-y-2">{partner.benefits.map((benefit) => (<li key={benefit} className="flex items-start text-sm"><CheckCircle className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />{benefit}</li>))}</ul></div><div className="mb-6"><h4 className="font-semibold mb-3 text-med-purple">Requirements:</h4><ul className="space-y-2">{partner.requirements.map((req) => (<li key={req} className="flex items-start text-sm text-muted-foreground"><div className="w-2 h-2 bg-muted-foreground/50 rounded-full mr-2 mt-2 flex-shrink-0" />{req}</li>))}</ul></div></CardContent><div className="p-6 pt-0"><Button className="w-full" variant="link" onClick={() => handlePartnerContact(partner.ctaMessage)}>{partner.cta}</Button></div></Card>))}
-          </div>
+      </div>
+
+      {/* Partnership Types - Three Column Layout */}
+           <div
+        ref={valuesSectionRef}
+        className="relative bg-cocoa overflow-visible flex items-center z-20 justify-center"
+        style={{
+          height: '120vh',
+          clipPath: 'polygon(0% 25px, 5% 35px, 10% 28px, 15% 45px, 20% 38px, 25% 55px, 30% 48px, 35% 70px, 40% 62px, 45% 80px, 50% 75px, 55% 85px, 60% 78px, 65% 70px, 70% 60px, 75% 50px, 80% 55px, 85% 48px, 90% 58px, 95% 52px, 100% 60px, 100% calc(100% - 60px), 95% calc(100% - 52px), 90% calc(100% - 58px), 85% calc(100% - 48px), 80% calc(100% - 55px), 75% calc(100% - 50px), 70% calc(100% - 60px), 65% calc(100% - 70px), 60% calc(100% - 78px), 55% calc(100% - 85px), 50% calc(100% - 75px), 45% calc(100% - 80px), 40% calc(100% - 62px), 35% calc(100% - 70px), 30% calc(100% - 48px), 25% calc(100% - 55px), 20% calc(100% - 38px), 15% calc(100% - 45px), 10% calc(100% - 28px), 5% calc(100% - 35px), 0% calc(100% - 25px))',
+        }}
+      >
+
+    
+      <div className="relative w-full max-w-[100vw] flex flex-col lg:flex-row z-20 overflow-hidden mx-auto">
+        {partnerTypes.map((partner, index) => {
+          const ref =
+            index === 0
+              ? leftButtonRef
+              : index === 1
+              ? middleButtonRef
+              : rightButtonRef;
+
+          return (
+            <div
+              key={partner.title}
+              className={`partner-card relative ${partner.bgColor} w-full  lg:w-[33.33%] flex flex-col items-center px-8 lg:px-12 py-16 lg:py-20 min-h-[500px]`}
+            >
+              <div className="flex-grow pt-[100px]">
+                {/* Title */}
+                <h2
+                  className={`${partner.headerColor} font-black text-4xl lg:text-5xl leading-tight mb-4 font-sans`}
+                >
+                  {partner.title}
+                </h2>
+
+                {/* Description */}
+                <p
+                  className={`${partner.textColor} opacity-80 text-base mb-12 font-sans leading-relaxed`}
+                >
+                  {partner.description}
+                </p>
+
+                {/* Benefits */}
+                <div className="mb-12">
+                  <h3
+                    className={`${partner.headerColor} font-bold text-xl text-left mb-6 font-sans`}
+                  >
+                    BENEFITS
+                  </h3>
+                  <ul className="space-y-4">
+                    {partner.benefits.map((benefit) => (
+                      <li
+                        key={benefit}
+                        className={`flex items-start ${partner.textColor}`}
+                      >
+                        <CheckCircle className="w-5 h-5 mr-3 mt-0.5 flex-shrink-0" />
+                        <span className="text-sm font-sans leading-relaxed">
+                          {benefit}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Requirements */}
+                <div className="mb-12">
+                  <h3
+                    className={`${partner.headerColor} font-bold text-xl text-left  mb-6 font-sans`}
+                  >
+                    REQUIREMENTS
+                  </h3>
+                  <ul className="space-y-3">
+                    {partner.requirements.map((req) => (
+                      <li
+                        key={req}
+                        className={`flex items-start ${partner.textColor} opacity-80`}
+                      >
+                        <div className="w-2 h-2 bg-current rounded-full mr-3 mt-2 flex-shrink-0" />
+                        <span className="text-sm font-sans leading-relaxed">
+                          {req}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              {/* CTA Button */}
+              <div className="w-full ">
+                <div
+                  ref={ref}
+                  onMouseEnter={() => {
+                    if (index === 0) handleLeftButtonHover(true);
+                    else if (index === 1) handleMiddleButtonHover(true);
+                    else handleRightButtonHover(true);
+                  }}
+                  onMouseLeave={() => {
+                    if (index === 0) handleLeftButtonHover(false);
+                    else if (index === 1) handleMiddleButtonHover(false);
+                    else handleRightButtonHover(false);
+                  }}
+                >
+                  <button
+                    className={`w-full ${
+                      partner.bgColor === "bg-sand"
+                        ? "bg-sand text-cocoa"
+                        : "bg-sand text-cocoa"
+                    } py-6 px-8 font-black text-lg font-sans tracking-wide hover:transition-colors transition-colors`}
+                    onClick={() => handlePartnerContact(partner.ctaMessage)}
+                  >
+                    {partner.cta}
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
         </div>
-      </section>
-      <section className="py-16 bg-muted">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12"><h2 className="text-3xl md:text-4xl font-bold font-serif mb-4">Partner Support & Features</h2><p className="text-lg text-muted-foreground max-w-3xl mx-auto">We provide comprehensive support to ensure your success as a Caye Cruiser partner.</p></div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {supportFeatures.map((feature) => (<Card key={feature.title} className="text-center hover:shadow-lg transition-shadow border-border/50"><CardHeader><div className="w-12 h-12 bg-green/10 rounded-lg flex items-center justify-center mx-auto mb-4 text-green">{feature.icon}</div><CardTitle className="text-lg">{feature.title}</CardTitle></CardHeader><CardContent><p className="text-muted-foreground text-sm">{feature.description}</p></CardContent></Card>))}
-          </div>
-        </div>
-      </section>
-    </>
+
+
+      {/* Bottom Navigation */}
+      <BottomNav />
+
+      {/* Footer */}
+      <div className="relative" style={{ zIndex: 20 }}>
+        <Footer />
+      </div>
+    </div>
+
   );
 };
 

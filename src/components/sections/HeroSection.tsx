@@ -2,11 +2,9 @@ import { useEffect } from "react";
 import { gsap } from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import IguanaSVG from "@/components/images/figma/iguana.svg";
-import Plantleft from "@/components/images/figma/left-plants.svg";
-import Plantright from "@/components/images/figma/left-plants.svg";
+import PlantsSVG from "@/components/images/figma/left-plants.svg";
 import WiggleBgSVG from "@/components/images/figma/wiggle-bg.svg";
-import MapSection from "./MapSection";
-import TaglineSection from "./TaglineSection";
+
 gsap.registerPlugin(ScrollTrigger);
 
 const HeroSection = () => {
@@ -19,28 +17,36 @@ const HeroSection = () => {
       if (!iguana) return;
 
       ctx = gsap.context(() => {
-        // Set GPU acceleration
+        // Set GPU acceleration and initial position (fully off-screen to the left)
         gsap.set(iguana, {
           willChange: "transform",
           force3D: true,
+          x: "-100%",
+          opacity: 1, // Fully visible, no fade
         });
 
-        // Animate iguana from left to right on scroll
+        // Animate iguana sliding in from the left to stop at letter C on page load
+        gsap.to(iguana, {
+          x: "0%", // Stop at the first letter C
+          duration: 1.2,
+          ease: "power2.out",
+          delay: 0.3,
+        });
+
+        // Scroll-triggered animation: iguana continues across the word as user scrolls
         gsap.fromTo(
           iguana,
           {
-            x: "-550vw",
-            opacity: 0,
+            x: "0%", // Start from letter C (where initial animation stopped)
           },
           {
-            x: 0,
-            opacity: 1,
-            ease: "power2.out",
+            x: "100%", // Move across to the end of the word
+            ease: "none",
             scrollTrigger: {
-              trigger: iguana,
-              start: "top 80%",
-              end: "top 40%",
-              scrub: 3,
+              trigger: ".hero-section-wrapper",
+              start: "top top", // Start moving when hero hits top of viewport
+              end: "bottom top", // Finish when hero exits viewport
+              scrub: 1,
               invalidateOnRefresh: true,
             },
           }
@@ -57,7 +63,7 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <div className="relative w-full max-w-[100vw] overflow-visible bg-cocoa mx-auto pb-0">
+    <div className="hero-section-wrapper relative overflow-hidden bg-cocoa mx-auto w-full h-full">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-40">
         <img
@@ -69,19 +75,19 @@ const HeroSection = () => {
       </div>
 
       {/* Decorative Leaves - Corners */}
-      <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-visible">
+      <div className="absolute w-full h-full pointer-events-none overflow-hidden">
         {/* Left Leaves */}
         <div
           className="absolute"
           style={{
-            top: "15%",
+            top: "0%",
             left: "-25%",
             width: "1000px",
             height: "auto",
           }}
         >
           <img
-            src={Plantleft}
+            src={PlantsSVG}
             alt=""
             className="w-full h-auto object-contain"
           />
@@ -90,7 +96,7 @@ const HeroSection = () => {
         <div
           className="absolute"
           style={{
-            top: "15%",
+            top: "0%",
             right: "-25%",
             width: "1000px",
             height: "auto",
@@ -98,7 +104,7 @@ const HeroSection = () => {
           }}
         >
           <img
-            src={Plantright}
+            src={PlantsSVG}
             alt=""
             className="w-full h-auto object-contain"
           />
@@ -106,10 +112,10 @@ const HeroSection = () => {
       </div>
 
       {/* Hero Content */}
-      <div className="relative z-10 w-screen pt-[300px] pb-0 flex flex-col justify-center">
-        <div className="w-screen px-4 mt-52">
+      <div className="relative z-10 flex flex-col justify-center">
+        <div className="w-full px-4 mt-52">
           {/* Iguana and Text Layout */}
-          <div className="relative w-screen flex justify-center">
+          <div className="relative w-full flex justify-center">
             {/* Iguana Mascot - Positioned above C in CAYECRUISER*/}
             <div
               id="iguana-hero"
@@ -133,20 +139,16 @@ const HeroSection = () => {
   
        {/* CAYECRUISER - Large Text - Full Width */}
         <h1
-          className="font-grante uppercase leading-none tracking-[0] text-center w-screen text-sand"
+          className="font-grante uppercase leading-none tracking-[0] text-center w-full text-sand"
           style={{
             fontSize: "clamp(6rem, 23.1vw, 29rem)",
           }}
         >
           CAYECRUISER
         </h1>
-      </div>
-      <div className="mt-80">
-      <TaglineSection />
-
-      </div>
-            <MapSection />
+      </div>        
     </div>
+  
   );
 };
 
